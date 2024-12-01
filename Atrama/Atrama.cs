@@ -363,11 +363,11 @@ namespace Atrama
                 return transform.Find("Fabricator-Location").gameObject;
             }
         }
-        public override GameObject BoundingBox
+        public override BoxCollider BoundingBoxCollider
         {
             get
             {
-                return transform.Find("model/BoundingBox").gameObject;
+                return transform.Find("model/BoundingBox").GetComponent<BoxCollider>();
             }
         }
         public override List<GameObject> TetherSources
