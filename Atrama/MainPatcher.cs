@@ -29,7 +29,7 @@ namespace Atrama
         }
     }
 
-    [BepInPlugin("com.mikjaw.subnautica.atrama.mod", "AtramaVehicle", "1.3.2")]
+    [BepInPlugin("com.mikjaw.subnautica.atrama.mod", "AtramaVehicle", "1.4.2")]
     [BepInDependency("com.mikjaw.subnautica.vehicleframework.mod")]
     [BepInDependency("com.snmodding.nautilus")]
 
