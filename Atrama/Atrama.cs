@@ -546,5 +546,17 @@ namespace Atrama
                 return crafterSprite;
             }
         }
+        public override List<Transform> LavaLarvaAttachPoints
+        {
+            get
+            {
+                var list = new List<Transform>();
+                foreach (Transform child in transform.Find("LLAttachPoints"))
+                {
+                    list.Add(child);
+                }
+                return list;
+            }
+        }
     }
 }
