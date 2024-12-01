@@ -103,9 +103,8 @@ namespace Atrama
         public override void Awake()
         {
             // Give the Odyssey a new name and make sure we track it well.
-            OGVehicleName = "ATR-" + Mathf.RoundToInt(UnityEngine.Random.value * 10000).ToString();
-            vehicleName = OGVehicleName;
-            NowVehicleName = OGVehicleName;
+            string newName = "ATR-" + Mathf.RoundToInt(UnityEngine.Random.value * 10000).ToString();
+            SetName(newName);
             base.Awake();
         }
         public override string EncyclopediaEntry
