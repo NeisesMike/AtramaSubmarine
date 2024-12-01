@@ -171,20 +171,6 @@ namespace Atrama
                 return model;
             }
         }
-        public override GameObject StorageRootObject
-        {
-            get
-            {
-                return transform.Find("StorageRootObject").gameObject;
-            }
-        }
-        public override GameObject ModulesRootObject
-        {
-            get
-            {
-                return transform.Find("ModulesRootObject").gameObject;
-            }
-        }
         public override List<VehicleFramework.VehicleParts.VehicleHatchStruct> Hatches
         {
             get
