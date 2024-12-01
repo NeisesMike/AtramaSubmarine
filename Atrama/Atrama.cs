@@ -19,7 +19,6 @@ namespace Atrama
     public class Atrama : Submarine
     {
         public static GameObject model = null;
-        public static GameObject controlPanel = null;
         public static Atlas.Sprite pingSprite = null;
         public static Atlas.Sprite crafterSprite = null;
         public static void GetAssets()
@@ -29,7 +28,7 @@ namespace Atrama
             var myLoadedAssetBundle = AssetBundle.LoadFromFile(Path.Combine(modPath, "assets/atrama"));
             if (myLoadedAssetBundle == null)
             {
-                //Logger.Log("Failed to load AssetBundle!");
+                VehicleFramework.Logger.Error("Atrama Error: Failed to load AssetBundle!");
                 return;
             }
 
@@ -40,7 +39,7 @@ namespace Atrama
                 {
                     SpriteAtlas thisAtlas = (SpriteAtlas)obj;
 
-                    Sprite ping = thisAtlas.GetSprite("PingSprite");
+                    Sprite ping = thisAtlas.GetSprite("AtramaHudPing");
                     pingSprite = new Atlas.Sprite(ping);
 
                     Sprite ping3 = thisAtlas.GetSprite("CrafterSprite");
@@ -49,14 +48,6 @@ namespace Atrama
                 else if (obj.ToString().Contains("Atrama"))
                 {
                     model = (GameObject)obj;
-                }
-                else if (obj.ToString().Contains("Control-Panel"))
-                {
-                    controlPanel = (GameObject)obj;
-                }
-                else
-                {
-                    //Logger.Log(obj.ToString());
                 }
             }
         }
@@ -330,8 +321,7 @@ namespace Atrama
         {
             get
             {
-                controlPanel.transform.SetParent(transform);
-                return controlPanel;
+                return transform.Find("Control-Panel").gameObject;
             }
         }
         public override GameObject ColorPicker
