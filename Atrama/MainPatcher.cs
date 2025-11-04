@@ -1,21 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using UnityEngine;
-using HarmonyLib;
-using System.Runtime.CompilerServices;
-using System.Collections;
-using Nautilus.Options.Attributes;
-using Nautilus.Options;
-using Nautilus.Json;
-using Nautilus.Handlers;
+﻿using HarmonyLib;
 using Nautilus.Utility;
 using BepInEx;
-using BepInEx.Logging;
-using BepInEx.Bootstrap;
 
 
 namespace Atrama
@@ -29,7 +14,7 @@ namespace Atrama
         }
     }
 
-    [BepInPlugin("com.mikjaw.subnautica.atrama.mod", "AtramaVehicle", "1.4.2")]
+    [BepInPlugin("com.mikjaw.subnautica.atrama.mod", "AtramaVehicle", "2.0.0")]
     [BepInDependency("com.mikjaw.subnautica.vehicleframework.mod")]
     [BepInDependency("com.snmodding.nautilus")]
 

@@ -10,17 +10,18 @@ using System.IO;
 using System.Reflection;
 
 using UnityEngine.U2D;
-using VehicleFramework.VehicleParts;
+using VehicleFramework.VehicleBuilding;
 using VehicleFramework.VehicleTypes;
 using VehicleFramework.Engines;
+using VehicleFramework.Interfaces;
 
 namespace Atrama
 {
-    public class Atrama : Submarine
+    public class Atrama : Submarine, INavigationLights
     {
         public static GameObject model = null;
-        public static Atlas.Sprite pingSprite = null;
-        public static Atlas.Sprite crafterSprite = null;
+        public static UnityEngine.Sprite pingSprite = null;
+        public static UnityEngine.Sprite crafterSprite = null;
         public static void GetAssets()
         {
             // load the asset bundle
@@ -38,12 +39,8 @@ namespace Atrama
                 if (obj.ToString().Contains("SpriteAtlas"))
                 {
                     SpriteAtlas thisAtlas = (SpriteAtlas)obj;
-
-                    Sprite ping = thisAtlas.GetSprite("AtramaHudPing");
-                    pingSprite = new Atlas.Sprite(ping);
-
-                    Sprite ping3 = thisAtlas.GetSprite("CrafterSprite");
-                    crafterSprite = new Atlas.Sprite(ping3);
+                    pingSprite = thisAtlas.GetSprite("AtramaHudPing");
+                    crafterSprite = thisAtlas.GetSprite("CrafterSprite");
                 }
                 else if (obj.ToString().Contains("Atrama"))
                 {
@@ -69,7 +66,7 @@ namespace Atrama
         {
             GetAssets();
             Submarine atrama = model.EnsureComponent<Atrama>() as Submarine;
-            yield return UWE.CoroutineHost.StartCoroutine(VehicleRegistrar.RegisterVehicle(atrama));
+            yield return UWE.CoroutineHost.StartCoroutine(VehicleFramework.Admin.VehicleRegistrar.RegisterVehicle(atrama));
         }
 
         public override string vehicleDefaultName
@@ -128,25 +125,25 @@ namespace Atrama
                 return ency;
             }
         }
-        public override List<VehicleFramework.VehicleParts.VehicleBattery> Batteries
+        public override List<VehicleBattery> Batteries
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleBattery>();
+                var list = new List<VehicleBattery>();
 
-                VehicleFramework.VehicleParts.VehicleBattery vb1 = new VehicleFramework.VehicleParts.VehicleBattery();
+                VehicleBattery vb1 = new VehicleBattery();
                 vb1.BatterySlot = transform.Find("model/Mechanical-Panel/BatteryInputs/1").gameObject;
                 list.Add(vb1);
 
-                VehicleFramework.VehicleParts.VehicleBattery vb2 = new VehicleFramework.VehicleParts.VehicleBattery();
+                VehicleBattery vb2 = new VehicleBattery();
                 vb2.BatterySlot = transform.Find("model/Mechanical-Panel/BatteryInputs/2").gameObject;
                 list.Add(vb2);
 
-                VehicleFramework.VehicleParts.VehicleBattery vb3 = new VehicleFramework.VehicleParts.VehicleBattery();
+                VehicleBattery vb3 = new VehicleBattery();
                 vb3.BatterySlot = transform.Find("model/Mechanical-Panel/BatteryInputs/3").gameObject;
                 list.Add(vb3);
 
-                VehicleFramework.VehicleParts.VehicleBattery vb4 = new VehicleFramework.VehicleParts.VehicleBattery();
+                VehicleBattery vb4 = new VehicleBattery();
                 vb4.BatterySlot = transform.Find("model/Mechanical-Panel/BatteryInputs/4").gameObject;
                 list.Add(vb4);
 
@@ -161,12 +158,12 @@ namespace Atrama
                 return model;
             }
         }
-        public override List<VehicleFramework.VehicleParts.VehicleHatchStruct> Hatches
+        public override List<VehicleHatchStruct> Hatches
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleHatchStruct>();
-                VehicleFramework.VehicleParts.VehicleHatchStruct vhs = new VehicleFramework.VehicleParts.VehicleHatchStruct();
+                var list = new List<VehicleHatchStruct>();
+                VehicleHatchStruct vhs = new VehicleHatchStruct();
                 Transform mainHatch = transform.Find("model/Hatch");
                 vhs.Hatch = mainHatch.gameObject;
                 vhs.EntryLocation = mainHatch.Find("Entry");
@@ -176,13 +173,13 @@ namespace Atrama
                 return list;
             }
         }
-        public override List<VehicleFramework.VehicleParts.VehicleFloodLight> HeadLights
+        public override List<VehicleFloodLight> HeadLights
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleFloodLight>();
+                var list = new List<VehicleFloodLight>();
 
-                VehicleFramework.VehicleParts.VehicleFloodLight leftLight = new VehicleFramework.VehicleParts.VehicleFloodLight
+                VehicleFloodLight leftLight = new VehicleFloodLight
                 {
                     Light = transform.Find("lights_parent/HeadLights/LeftLight").gameObject,
                     Angle = 60,
@@ -192,7 +189,7 @@ namespace Atrama
                 };
                 list.Add(leftLight);
 
-                VehicleFramework.VehicleParts.VehicleFloodLight rightLight = new VehicleFramework.VehicleParts.VehicleFloodLight
+                VehicleFloodLight rightLight = new VehicleFloodLight
                 {
                     Light = transform.Find("lights_parent/HeadLights/RightLight").gameObject,
                     Angle = 60,
@@ -205,13 +202,13 @@ namespace Atrama
                 return list;
             }
         }
-        public override List<VehicleFramework.VehicleParts.VehicleFloodLight> FloodLights
+        public override List<VehicleFloodLight> FloodLights
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleFloodLight>();
+                var list = new List<VehicleFloodLight>();
 
-                VehicleFramework.VehicleParts.VehicleFloodLight mainFlood = new VehicleFramework.VehicleParts.VehicleFloodLight
+                VehicleFloodLight mainFlood = new VehicleFloodLight
                 {
                     Light = transform.Find("lights_parent/FloodLights/main").gameObject,
                     Angle = 120,
@@ -222,7 +219,7 @@ namespace Atrama
                 list.Add(mainFlood);
 
 
-                VehicleFramework.VehicleParts.VehicleFloodLight portFlood = new VehicleFramework.VehicleParts.VehicleFloodLight
+                VehicleFloodLight portFlood = new VehicleFloodLight
                 {
                     Light = transform.Find("lights_parent/FloodLights/port").gameObject,
                     Angle = 90,
@@ -233,7 +230,7 @@ namespace Atrama
                 list.Add(portFlood);
 
 
-                VehicleFramework.VehicleParts.VehicleFloodLight starboardFlood = new VehicleFramework.VehicleParts.VehicleFloodLight
+                VehicleFloodLight starboardFlood = new VehicleFloodLight
                 {
                     Light = transform.Find("lights_parent/FloodLights/starboard").gameObject,
                     Angle = 90,
@@ -246,38 +243,36 @@ namespace Atrama
                 return list;
             }
         }
-        public override List<VehicleFramework.VehicleParts.VehiclePilotSeat> PilotSeats
+        public override VehiclePilotSeat PilotSeat
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehiclePilotSeat>();
-                VehicleFramework.VehicleParts.VehiclePilotSeat vps = new VehicleFramework.VehicleParts.VehiclePilotSeat();
+                VehiclePilotSeat vps = new VehiclePilotSeat();
                 Transform mainSeat = transform.Find("model/PilotSeat");
                 vps.Seat = mainSeat.gameObject;
                 vps.SitLocation = mainSeat.Find("SitLocation").gameObject;
                 vps.ExitLocation = mainSeat.Find("ExitLocation");
                 vps.LeftHandLocation = mainSeat;
                 vps.RightHandLocation = mainSeat;
-                list.Add(vps);
-                return list;
+                return vps;
             }
         }
-        public override List<VehicleFramework.VehicleParts.VehicleStorage> InnateStorages
+        public override List<VehicleStorage> InnateStorages
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleStorage>();
+                var list = new List<VehicleStorage>();
 
                 Transform left = transform.Find("model/InnateStorage/LeftStorage");
                 Transform right = transform.Find("model/InnateStorage/RightStorage");
 
-                VehicleFramework.VehicleParts.VehicleStorage leftVS = new VehicleFramework.VehicleParts.VehicleStorage();
+                VehicleStorage leftVS = new VehicleStorage();
                 leftVS.Container = left.gameObject;
                 leftVS.Height = 8;
                 leftVS.Width = 6;
                 list.Add(leftVS);
 
-                VehicleFramework.VehicleParts.VehicleStorage rightVS = new VehicleFramework.VehicleParts.VehicleStorage();
+                VehicleStorage rightVS = new VehicleStorage();
                 rightVS.Container = right.gameObject;
                 rightVS.Height = 8;
                 rightVS.Width = 6;
@@ -286,14 +281,14 @@ namespace Atrama
                 return list;
             }
         }
-        public override List<VehicleFramework.VehicleParts.VehicleStorage> ModularStorages
+        public override List<VehicleStorage> ModularStorages
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleStorage>();
-                for(int i=1; i<7; i++)
+                var list = new List<VehicleStorage>();
+                for (int i = 1; i < 7; i++)
                 {
-                    VehicleFramework.VehicleParts.VehicleStorage thisVS = new VehicleFramework.VehicleParts.VehicleStorage();
+                    VehicleStorage thisVS = new VehicleStorage();
                     Transform thisStorage = transform.Find("model/ModularStorage/StorageModule" + i.ToString());
                     thisVS.Container = thisStorage.gameObject;
                     thisVS.Height = 4;
@@ -303,12 +298,12 @@ namespace Atrama
                 return list;
             }
         }
-        public override List<VehicleFramework.VehicleParts.VehicleUpgrades> Upgrades
+        public override List<VehicleUpgrades> Upgrades
         {
             get
             {
-                var list = new List<VehicleFramework.VehicleParts.VehicleUpgrades>();
-                VehicleFramework.VehicleParts.VehicleUpgrades vu = new VehicleFramework.VehicleParts.VehicleUpgrades();
+                var list = new List<VehicleUpgrades>();
+                VehicleUpgrades vu = new VehicleUpgrades();
                 vu.Interface = transform.Find("model/Mechanical-Panel/Upgrades-Panel").gameObject;
                 vu.Flap = vu.Interface;
                 vu.AnglesClosed = Vector3.zero;
@@ -362,7 +357,7 @@ namespace Atrama
             get
             {
                 var list = new List<GameObject>();
-                foreach(Transform child in transform.Find("model/WaterClipProxies"))
+                foreach (Transform child in transform.Find("model/WaterClipProxies"))
                 {
                     list.Add(child.gameObject);
                 }
@@ -378,96 +373,61 @@ namespace Atrama
                 return list;
             }
         }
-        public override List<GameObject> NavigationPortLights
+        List<GameObject> INavigationLights.NavigationPortLights()
         {
-            get
+            var list = new List<GameObject>();
+            foreach (Transform child in transform.Find("lights_parent/NavigationLights/PortLights"))
             {
-                var list = new List<GameObject>();
-                foreach (Transform child in transform.Find("lights_parent/NavigationLights/PortLights"))
-                {
-                    list.Add(child.gameObject);
-                }
-                return list;
+                list.Add(child.gameObject);
             }
+            return list;
         }
-        public override List<GameObject> NavigationStarboardLights
+        List<GameObject> INavigationLights.NavigationStarboardLights()
         {
-            get
+            var list = new List<GameObject>();
+            foreach (Transform child in transform.Find("lights_parent/NavigationLights/StarboardLights"))
             {
-                var list = new List<GameObject>();
-                foreach (Transform child in transform.Find("lights_parent/NavigationLights/StarboardLights"))
-                {
-                    list.Add(child.gameObject);
-                }
-                return list;
+                list.Add(child.gameObject);
             }
+            return list;
         }
-        public override List<GameObject> NavigationPositionLights
+        List<GameObject> INavigationLights.NavigationPositionLights()
         {
-            get
+            var list = new List<GameObject>();
+            foreach (Transform child in transform.Find("lights_parent/NavigationLights/PositionLights"))
             {
-                var list = new List<GameObject>();
-                foreach (Transform child in transform.Find("lights_parent/NavigationLights/PositionLights"))
-                {
-                    list.Add(child.gameObject);
-                }
-                return list;
+                list.Add(child.gameObject);
             }
+            return list;
         }
-        public override List<GameObject> NavigationWhiteStrobeLights
+        List<GameObject> INavigationLights.NavigationWhiteStrobeLights()
         {
-            get
+            var list = new List<GameObject>();
+            foreach (Transform child in transform.Find("lights_parent/NavigationLights/WhiteStrobes"))
             {
-                var list = new List<GameObject>();
-                foreach (Transform child in transform.Find("lights_parent/NavigationLights/WhiteStrobes"))
-                {
-                    list.Add(child.gameObject);
-                }
-                return list;
+                list.Add(child.gameObject);
             }
+            return list;
         }
-        public override List<GameObject> NavigationRedStrobeLights
+        List<GameObject> INavigationLights.NavigationRedStrobeLights()
         {
-            get
+            var list = new List<GameObject>();
+            foreach (Transform child in transform.Find("lights_parent/NavigationLights/RedStrobes"))
             {
-                var list = new List<GameObject>();
-                foreach (Transform child in transform.Find("lights_parent/NavigationLights/RedStrobes"))
-                {
-                    list.Add(child.gameObject);
-                }
-                return list;
+                list.Add(child.gameObject);
             }
+            return list;
         }
-        public override List<VehicleBattery> BackupBatteries
-        {
-            get
-            {
-                /*
-                var list = new List<VehicleFramework.VehicleParts.VehicleBattery>();
-                VehicleFramework.VehicleParts.VehicleBattery vb1 = new VehicleFramework.VehicleParts.VehicleBattery();
-                vb1.BatterySlot = transform.Find("Main-Body/BackupBattery").gameObject;
-                list.Add(vb1);
-                */
-                return new List<VehicleFramework.VehicleParts.VehicleBattery>();
-            }
-        }
-        public override GameObject CollisionModel
-        {
-            get
-            {
-                return transform.Find("model/CollisionModel").gameObject;
-            }
-        }
+        public override GameObject[] CollisionModel => new GameObject[] { transform.Find("model/CollisionModel").gameObject };
 
-
-        public override ModVehicleEngine Engine
+        public override VFEngine VFEngine
         {
             get
             {
                 return gameObject.EnsureComponent<AtramaEngine>();
             }
         }
-        public override Atlas.Sprite PingSprite
+        public override UnityEngine.Sprite PingSprite
         {
             get
             {
@@ -514,7 +474,7 @@ namespace Atrama
                 return true;
             }
         }
-        public override Atlas.Sprite CraftingSprite
+        public override UnityEngine.Sprite CraftingSprite
         {
             get
             {
