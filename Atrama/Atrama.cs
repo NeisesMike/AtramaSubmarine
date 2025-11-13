@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using VehicleFramework;
 using System.IO;
 using System.Reflection;
-
 using UnityEngine.U2D;
 using VehicleFramework.VehicleBuilding;
 using VehicleFramework.VehicleTypes;
@@ -52,13 +47,15 @@ namespace Atrama
         {
             get
             {
-                Dictionary<TechType, int> recipe = new Dictionary<TechType, int>();
-                recipe.Add(TechType.TitaniumIngot, 1);
-                recipe.Add(TechType.PlasteelIngot, 1);
-                recipe.Add(TechType.Lubricant, 1);
-                recipe.Add(TechType.AdvancedWiringKit, 1);
-                recipe.Add(TechType.Lead, 2);
-                recipe.Add(TechType.EnameledGlass, 2);
+                Dictionary<TechType, int> recipe = new Dictionary<TechType, int>
+                {
+                    { TechType.TitaniumIngot, 1 },
+                    { TechType.PlasteelIngot, 1 },
+                    { TechType.Lubricant, 1 },
+                    { TechType.AdvancedWiringKit, 1 },
+                    { TechType.Lead, 2 },
+                    { TechType.EnameledGlass, 2 }
+                };
                 return recipe;
             }
         }
@@ -68,7 +65,6 @@ namespace Atrama
             Submarine atrama = model.EnsureComponent<Atrama>() as Submarine;
             yield return UWE.CoroutineHost.StartCoroutine(VehicleFramework.Admin.VehicleRegistrar.RegisterVehicle(atrama));
         }
-
         public override string vehicleDefaultName
         {
             get
@@ -85,7 +81,7 @@ namespace Atrama
         {
             get
             {
-                return "A submarine built for construction. It is quite sluggish, but has an enormous storage capacity.";
+                return "A submarine built for construction. Its great top speed is second only to its enormous storage capacity.";
             }
         }
         public override void Awake()
@@ -129,28 +125,23 @@ namespace Atrama
         {
             get
             {
-                var list = new List<VehicleBattery>();
-
-                VehicleBattery vb1 = new VehicleBattery();
-                vb1.BatterySlot = transform.Find("model/Mechanical-Panel/BatteryInputs/1").gameObject;
-                list.Add(vb1);
-
-                VehicleBattery vb2 = new VehicleBattery();
-                vb2.BatterySlot = transform.Find("model/Mechanical-Panel/BatteryInputs/2").gameObject;
-                list.Add(vb2);
-
-                VehicleBattery vb3 = new VehicleBattery();
-                vb3.BatterySlot = transform.Find("model/Mechanical-Panel/BatteryInputs/3").gameObject;
-                list.Add(vb3);
-
-                VehicleBattery vb4 = new VehicleBattery();
-                vb4.BatterySlot = transform.Find("model/Mechanical-Panel/BatteryInputs/4").gameObject;
-                list.Add(vb4);
-
-                return list;
+                List<Transform> batteryTransforms = new List<Transform>()
+                {
+                    transform.Find("model/Mechanical-Panel/BatteryInputs/1"),
+                    transform.Find("model/Mechanical-Panel/BatteryInputs/2"),
+                    transform.Find("model/Mechanical-Panel/BatteryInputs/3"),
+                    transform.Find("model/Mechanical-Panel/BatteryInputs/4"),
+                };
+                VehicleBattery CreateStorage(Transform tr)
+                {
+                    return new VehicleBattery
+                    {
+                        BatterySlot = tr.gameObject
+                    };
+                }
+                return batteryTransforms.Select(CreateStorage).ToList();
             }
         }
-
         public override GameObject VehicleModel
         {
             get
@@ -247,13 +238,15 @@ namespace Atrama
         {
             get
             {
-                VehiclePilotSeat vps = new VehiclePilotSeat();
                 Transform mainSeat = transform.Find("model/PilotSeat");
-                vps.Seat = mainSeat.gameObject;
-                vps.SitLocation = mainSeat.Find("SitLocation").gameObject;
-                vps.ExitLocation = mainSeat.Find("ExitLocation");
-                vps.LeftHandLocation = mainSeat;
-                vps.RightHandLocation = mainSeat;
+                VehiclePilotSeat vps = new VehiclePilotSeat
+                {
+                    Seat = mainSeat.gameObject,
+                    SitLocation = mainSeat.Find("SitLocation").gameObject,
+                    ExitLocation = mainSeat.Find("ExitLocation"),
+                    LeftHandLocation = mainSeat,
+                    RightHandLocation = mainSeat
+                };
                 return vps;
             }
         }
@@ -261,26 +254,26 @@ namespace Atrama
         {
             get
             {
-                var list = new List<VehicleStorage>();
-
-                Transform left = transform.Find("model/InnateStorage/LeftStorage");
-                Transform right = transform.Find("model/InnateStorage/RightStorage");
-
-                VehicleStorage leftVS = new VehicleStorage();
-                leftVS.Container = left.gameObject;
-                leftVS.Height = 8;
-                leftVS.Width = 6;
-                list.Add(leftVS);
-
-                VehicleStorage rightVS = new VehicleStorage();
-                rightVS.Container = right.gameObject;
-                rightVS.Height = 8;
-                rightVS.Width = 6;
-                list.Add(rightVS);
-
-                return list;
+                List<Transform> storageTransforms = new List<Transform>()
+                {
+                    transform.Find("model/InnateStorage/LeftStorage1"),
+                    transform.Find("model/InnateStorage/LeftStorage2"),
+                    transform.Find("model/InnateStorage/RightStorage2"),
+                    transform.Find("model/InnateStorage/RightStorage1"),
+                };
+                VehicleStorage CreateStorage(Transform tr)
+                {
+                    return new VehicleStorage
+                    {
+                        Container = tr.gameObject,
+                        Height = 8,
+                        Width = 8
+                    };
+                }
+                return storageTransforms.Select(CreateStorage).ToList();
             }
         }
+        /*
         public override List<VehicleStorage> ModularStorages
         {
             get
@@ -298,48 +291,24 @@ namespace Atrama
                 return list;
             }
         }
+        */
         public override List<VehicleUpgrades> Upgrades
         {
             get
             {
-                var list = new List<VehicleUpgrades>();
-                VehicleUpgrades vu = new VehicleUpgrades();
-                vu.Interface = transform.Find("model/Mechanical-Panel/Upgrades-Panel").gameObject;
-                vu.Flap = vu.Interface;
-                vu.AnglesClosed = Vector3.zero;
-                vu.AnglesOpened = Vector3.zero;
-                list.Add(vu);
-                return list;
+                return new List<VehicleUpgrades>()
+                {
+                    new VehicleUpgrades
+                    {
+                        Interface = transform.Find("model/Mechanical-Panel/Upgrades-Panel").gameObject
+                    }
+                };
             }
         }
-        public override GameObject ControlPanel
-        {
-            get
-            {
-                return transform.Find("Control-Panel").gameObject;
-            }
-        }
-        public override GameObject ColorPicker
-        {
-            get
-            {
-                return null;
-            }
-        }
-        public override GameObject Fabricator
-        {
-            get
-            {
-                return transform.Find("Fabricator-Location").gameObject;
-            }
-        }
-        public override BoxCollider BoundingBoxCollider
-        {
-            get
-            {
-                return transform.Find("model/BoundingBox").GetComponent<BoxCollider>();
-            }
-        }
+        public override GameObject ControlPanel => transform.Find("Control-Panel").gameObject;
+        public override GameObject ColorPicker => null;
+        public override GameObject Fabricator => transform.Find("Fabricator-Location").gameObject;
+        public override BoxCollider BoundingBoxCollider => transform.Find("model/BoundingBox").GetComponent<BoxCollider>();
         public override List<GameObject> TetherSources
         {
             get
@@ -368,9 +337,10 @@ namespace Atrama
         {
             get
             {
-                var list = new List<GameObject>();
-                list.Add(transform.Find("model/Canopy").gameObject);
-                return list;
+                return new List<GameObject>
+                {
+                    transform.Find("model/Canopy").gameObject
+                };
             }
         }
         List<GameObject> INavigationLights.NavigationPortLights()
@@ -419,68 +389,14 @@ namespace Atrama
             return list;
         }
         public override GameObject[] CollisionModel => new GameObject[] { transform.Find("model/CollisionModel").gameObject };
-
-        public override VFEngine VFEngine
-        {
-            get
-            {
-                return gameObject.EnsureComponent<AtramaEngine>();
-            }
-        }
-        public override UnityEngine.Sprite PingSprite
-        {
-            get
-            {
-                return pingSprite;
-            }
-        }
-
-        public override int BaseCrushDepth
-        {
-            get
-            {
-                return 900;
-            }
-        }
-
-        public override int MaxHealth
-        {
-            get
-            {
-                return 1000;
-            }
-        }
-
-        public override int Mass
-        {
-            get
-            {
-                return 4250;
-            }
-        }
-
-        public override int NumModules
-        {
-            get
-            {
-                return 8;
-            }
-        }
-
-        public override bool HasArms
-        {
-            get
-            {
-                return true;
-            }
-        }
-        public override UnityEngine.Sprite CraftingSprite
-        {
-            get
-            {
-                return crafterSprite;
-            }
-        }
+        public override VFEngine VFEngine => gameObject.EnsureComponent<AtramaEngine>();
+        public override UnityEngine.Sprite PingSprite => pingSprite;
+        public override int BaseCrushDepth => 900;
+        public override int MaxHealth => 1000;
+        public override int Mass => 4250;
+        public override int NumModules => 8;
+        public override bool HasArms => false;
+        public override UnityEngine.Sprite CraftingSprite => crafterSprite;
         public override List<Transform> LavaLarvaAttachPoints
         {
             get
@@ -493,5 +409,6 @@ namespace Atrama
                 return list;
             }
         }
+        public override List<Light> InteriorLights => new List<Light>() { transform.Find("lights_parent/WallLamp/light").gameObject.GetComponent<Light>() };
     }
 }
