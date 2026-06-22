@@ -9,7 +9,7 @@ namespace Atrama
     {
         public const string PluginID = "com.mikjaw.subnautica.atrama.mod";
         public const string PluginName = "AtramaVehicle";
-        public const string PluginVersion = "2.0.0";
+        public const string PluginVersion = "2.0.1";
         public void Start()
         {
             new Harmony(PluginID).PatchAll();

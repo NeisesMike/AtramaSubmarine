@@ -395,7 +395,6 @@ namespace Atrama
         public override int MaxHealth => 1000;
         public override int Mass => 4250;
         public override int NumModules => 8;
-        public override bool HasArms => false;
         public override UnityEngine.Sprite CraftingSprite => crafterSprite;
         public override List<Transform> LavaLarvaAttachPoints
         {
